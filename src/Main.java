@@ -18,13 +18,14 @@ public class Main {
         nhanVien1[4] = new NhanVienFulltime("5", "Pack", 30, "0982377729",
                 "Pack@gmail.com", 9000, 5000, 1200);
         nhanVien1[5] = new NhanVienFulltime("6", "Kangaroo", 22, "0987749729",
-                "Kangaroo@gmail.com", 11000, 2000, 1500);
+                "Kangaroo@gmail.com", 10000, 500, 300);
 
 //Hiển thị danh sách nhân viên
         displayNhanVien();
 
         System.out.println("1. Thêm Nhân Viên");
         System.out.println("2. Lương nhân viên toàn thời gian < trung bình");
+        System.out.println("3. Tổng lương phải trả cho toàn bộ nhân viên Partime");
         int selection = sc.nextInt();
         switch (selection) {
             case 1: {
@@ -90,9 +91,29 @@ public class Main {
                 for (NhanVien nhanVien : newNhanVien) {
                     System.out.println(nhanVien);
                 }
+                break;
             }
             case 2: {
-                luongTrungBinh();
+                //Danh sách lương nhân viên Fulltime thấp hơn lương trung bình
+                double luongTungBinh = luongTrungBinh();
+                for (int i = 0; i < nhanVien1.length; i++) {
+                    if (nhanVien1[i] instanceof NhanVienFulltime) {
+                        if (((NhanVienFulltime) nhanVien1[i]).getSalary() < luongTungBinh) {
+                            System.out.println("Nhân viên có mức lương nhỏ hơn trung bình: " + nhanVien1[i].getName() +
+                                    " với id = " + nhanVien1[i].getId());
+                        }
+                    }
+                }
+                break;
+            }
+            case 3:{
+                //Tổng lương phải trả cho toàn bộ nhân viên Partime
+                tongLuongNhanVienPartime();
+                break;
+            }
+            default:{
+                System.out.println("Selection: không chính xác");
+                break;
             }
         }
 
@@ -104,7 +125,7 @@ public class Main {
         }
     }
 
-    public static void luongTrungBinh() {
+    public static double luongTrungBinh() {
         double totalSaary = 0;
         int count = 0;
         for (int i = 0; i < nhanVien1.length; i++) {
@@ -116,6 +137,21 @@ public class Main {
         System.out.println("Công ty có " + count + " nhân viên Fulltime và tổng lương = " + totalSaary);
         double average = totalSaary / count;
         System.out.println("Trung bình lương của " + count + " nhân viên Fulltime = " + average);
+        return average;
+    }
+
+    public static void tongLuongNhanVienPartime(){
+        double totalSalary = 0;
+        int count = 0;
+        for (int i = 0; i < nhanVien1.length; i++){
+            if (nhanVien1[i] instanceof NhanVienParttime){
+                System.out.println("Nhân viên Partime id: " + nhanVien1[i].getId() + " có tổng lương: " +
+                        ((NhanVienParttime) nhanVien1[i]).totalSalaryParttime());
+                count++;
+                totalSalary += ((NhanVienParttime) nhanVien1[i]).totalSalaryParttime();
+            }
+        }
+        System.out.println("Tổng lương phải trả cho " + count + " nhân viên Partime = " + totalSalary);
     }
 
 //    public static void enterElement(){
